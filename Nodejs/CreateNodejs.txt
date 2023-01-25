@@ -1,0 +1,200 @@
+B1: npm init Hoặc npm init -y
+===================================================================================
+B2: In file package.json
+"scripts": {
+    "dev": "node index.js"
+  },
+
+- Tạo file index.js
+-Chạy file node index.js Hoặc (npm run dev)
+
+===================================================================================
+
+B3: 
+- npm i express
+- npm i dotenv (đọc biến môi trường)
+- npm i cors (server lấy data)
+- npm i nodemon (Tự động reload rever khi thay đổi)
+- npm install --save mysql2
+===================================================================================
+
+B4:
+In file index.js (https://expressjs.com/en/starter/hello-world.html)
+
+const express = require("express");
+//const bodyParser = require("body-parser");
+const cors = require("cors"); // url cho phép
+require("dotenv").config(); // kết nối biến môi trường
+const app = express();
+
+//app.use(bodyParser.json())
+// kết nối cort
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  })
+);
+
+//CRUD
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use("/", (req, res) => {
+  res.send("Hello World!");
+});
+
+const PORT = process.env.PORT || 8888;
+app.listen(PORT, () => {
+  console.log("Example app listening on port", PORT);
+});
+
+===================================================================================
+
+B5: In file package.json
+"scripts": {
+    "dev": "nodemon index.js"
+  },
+
+- Tạo file index.js
+-Chạy file node index.js Hoặc (npm run dev)
+
+===================================================================================
+
+B6: Tạo cây thu mục (mô hình mcv)
+-root
+--src
+---controlers (nhận request)
+---services   (nhận requet từ services)
+---routes     (api)
+---database (kết nối database)
+----index.js
+
+===================================================================================
+
+B8: IN folder database in file index.js
+
+const mysql = require("mysql2");
+require("dotenv").config(); // kết nối biến môi trường
+const pool = mysql.createPool({
+  host: process.env.CLIENT_URL,
+  user: process.env.USER,
+  database: process.env.nodejsdb,
+});
+
+module.exports = pool.promise();
+
+
+
+
+===================================================================================
+
+B9:
+- IN folder controler create file post_controler.js
+
+const pool = require("../database/index")
+const postsController = {
+    getAll: async (req, res) => {
+        try {
+            const [rows, fields] = await pool.query("select * from posts")
+            res.json({
+                data: rows
+            })
+        } catch (error) {
+            console.log(error)
+            res.json({
+                status: "error"
+            })
+        }
+    },
+    getById: async (req, res) => {
+        try {
+            const { id } = req.params
+	
+            const [rows, fields] = await pool.query("select * from posts where id = ?", [id])
+            res.json({
+                data: rows
+            })
+        } catch (error) {
+            console.log(error)
+            res.json({
+                status: "error"
+            })
+        }
+    },
+    create: async (req, res) => {
+        try {
+            const { title, content } = req.body
+            const sql = "insert into posts (title, content) values (?, ?)"
+            const [rows, fields] = await pool.query(sql, [title, content])
+            res.json({
+                data: rows
+            })
+        } catch (error) {
+            console.log(error)
+            res.json({
+                status: "error"
+            })
+        }
+    },
+    update: async (req, res) => {
+        try {
+            const { title, content } = req.body
+            const { id } = req.params
+            const sql = "update posts set title = ?, content = ? where id = ?"
+            const [rows, fields] = await pool.query(sql, [title, content, id])
+            res.json({
+                data: rows
+            })
+        } catch (error) {
+            console.log(error)
+            res.json({
+                status: "error"
+            })
+        }
+    }, 
+    delete: async (req, res) => {
+        try {
+            const { id } = req.params
+            const [rows, fields] = await pool.query("delete from posts where id = ?", [id])
+            res.json({
+                data: rows
+            })
+        } catch (error) {
+            console.log(error)
+            res.json({
+                status: "error"
+            })
+        }
+    }
+
+}
+
+module.exports = postsController
+
+===================================================================================
+     
+B10:
+- IN folder routes in file post_roter.js
+
+const express = require("express");
+const router = express.Router();
+
+const portControler = require("../controlers/post_controler");
+
+router.get("/", portControler.getAll);
+router.get("/:id", postsController.getById)
+router.post("/", postsController.create)
+router.put("/:id", postsController.update)
+router.delete("/:id", postsController.delete)
+
+module.exports = router;
+
+===================================================================================
+B11:IN root file index.js
+
+....
+const postRouter =require('./src/routes')
+app.use("/api/v1/post", postRouter);
+
+	

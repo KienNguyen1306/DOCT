@@ -1,0 +1,7 @@
+
+draggable = "true" => taoj ra ban sao
+
+
+///*/////////////
+desabled =true;       tắt sáng cho nút
+desabled =false;      bật sáng cho nút

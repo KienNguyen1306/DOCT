@@ -1,0 +1,16 @@
+b1:https://developers.facebook.com/?locale=vi_VN
+b2:ứng dụng của tôi
+b3:Tạo ứng dụng(người tiêu dùng)
+b4:Nhaapj tên app(tạo ứng dụng)
+b5:Đăng nhập facebook(thiết lập)
+b6:chọn web app(nhập url web)=>save=>tiếp tục
+
+b7:filebase copy link nhập vào url chuyển hướng
+
+**cách lấy thông tin cài đặt > thông tin ứng dụng
+
+
+
+
+
+https://console.cloud.google.com/apis/credentials?project=imposing-timer-371413

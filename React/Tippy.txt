@@ -1,0 +1,83 @@
+B1:https://github.com/atomiks/tippyjs-react
+npm i @tippyjs/react
+===========================================================================
+
+B2 :
+ <Tippy interactive delay={[800, 0]} offset={[-20, 0]} placement="bottom" render={renderPreview}>
+                <div className={cx('account-item')}>
+                    <img
+                        className={cx('avatar')}
+                    />
+                    <div className={cx('item-info')}>
+                        <p className={cx('nickname')}>
+                            <strong>quocnguyenphu</strong>
+                            <FontAwesomeIcon className={cx('check')} icon={faCheckCircle} />
+                        </p>
+                        <p className={cx('name')}>Quốc Nguyễn Phú</p>
+                    </div>
+                </div>
+            </Tippy>
+
+
+
+
+=====================================================================
+B3: Custom tippy
+
+import React from 'react';
+import Tippy from '@tippyjs/react/headless'; // different import path!
+
+const HeadlessTippy = () => (
+  <Tippy
+    render={attrs => (
+      <div className="box" tabIndex="-1" {...attrs}>
+        My tippy box
+      </div>
+    )}
+  >
+    <button>My button</button>
+  </Tippy>
+);
+
+
+=====================================================================
+B4: Dùng chung Tạo ra component rồi css base
+
+funesion TippyBase({chindren}){
+	return <div className="tippy">
+		{children}
+	<div/>
+}
+
+
+.tippy{
+	with:100%
+	min-height:1000px
+}
+
+B5: Cách dùng:
+
+
+import React from 'react';
+import Tippy from '@tippyjs/react/headless'; // different import path!
+
+const HeadlessTippy = () => (
+  <Tippy
+    render={attrs => (
+      <div className="box" tabIndex="-1" {...attrs}>
+	<TippyBase>
+		nội dung trong này (box:css kích thước mong muốn)
+	<TippyBase/>
+        My tippy box
+      </div>
+    )}
+  >
+    <button>My button</button>
+  </Tippy>
+);
+
+B6:
+content= nội dung
+
+placement =   //vị trí hiển thị
+vasilable = {điều kiện}

@@ -1,0 +1,16 @@
+.fixed-header {
+  background-color: #e6f0ff;
+  padding-top: 26px;
+  position: sticky;
+  top: -26px;
+  z-index: 2;
+}
+
+
+document.addEventListener('scroll', (event) => {
+    if(window.scrollY > 500){
+        nav.classList.add('tofixed');
+    }else{
+        nav.classList.remove('tofixed');
+    }
+})

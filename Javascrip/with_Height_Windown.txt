@@ -1,0 +1,21 @@
+lay tọa độ x,y => getClientRects()  =>left,right,top,bottom,width,height
+
+lấy chiều cao màn hình windown.innerHeight (chuẩn hơn)
+			hoặc screen.height
+
+
+
+*************************************** kéo thả ảnh
+sự kiện bắt sự kiện có một vật lạ đi ngang (dragover)
+sự kiện bắt sự kiện  lúc bắt đầu có một vật lạ đi ngang (dragstart)
+sự kiện bắt sự kiện lúc kết thúc có một vật lạ đi ngang (dragend)
+sự kiện hứng khi thả vào (drop) trước khi hứng thì phải bỏ mặt định
+
+**************************************** phần mềm vẽ
+dùng canvas in javascrip
+event mountdow click chuột xuống
+      moun
+
+
+thêm đầu 
+prepend

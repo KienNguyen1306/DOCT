@@ -1,0 +1,175 @@
+
+
+python -m venv venv
+
+********************************************************************
+           thao tác tạo modols
+python manage.py makemigrations polls
+python manage.py migrate
+********************************************************************
+
+********************************************************************
+on_delete  {SET_NULL , SET_DEFAULT ,CASCADE}
+********************************************************************
+
+
+
+********************************************************************
+class Meta :
+	abstract = True:tạo kế thừa
+	unique_together = ('subject','couses_id') : không được trùng
+	db_table : đổi tên bảng
+	ordering= ['id','name'] : sếp xêp
+
+********************************************************************
+
+
+
+============tạo dữ liệu
+table.objects.create(thuộc tính)
+
+
+============= truy vấn theo id khóa chính(pk)
+ python manage.py shell
+c = table.objects.get(pk = id)
+c__dict__
+
+============== truy vấn theo name đầu tiên
+table.objects.filter(name__contains = 'java')
+
+table.objects.filter(name__startswith = 'java')
+table.objects.filter(name__endwith = 'java')
+
+
+============== truy vấn tất cả
+table.objects.all()
+
+============== truy vấn join
+q = table1.objects.filter(table2__name__container = 'java'
+
+==================in truy vấn
+print(q.query
+
+======================================= tag ===================
+couses = models.ForeignKey(Couses,related_name="lesson",on_delete=models.CASCADE)
+tags = models.ManyToManyField('Tag',blank=True,null=True)
+
+c= Couses.objects.get(pk=1)
+c.lesson.all()
+
+Lesson.objects.filter(couses__des__contains="java")   lấy theeo ten
+
+Couses.objects.filter(lesson__active=True)
+
+
+================================app tag 
+t = Tag.objects.create(name = 'java') 
+l = Lesson.objects.get(pk=1)
+l.tags.add(t)
+ 
+t.lesson_set.all()   truy ván tag
+
+
+============================================== creacte =========================
+chưa có thì tạo ,có rồi thì thôi (acsion trạng thái cập nhập)
+ t , acsion = Tag.objects.get_or_create(name='reactejs')
+
+=================================== count() dếm số lượng
+=================================== first lấy dầu kp = đối tượng
+=================================== last  lấy cuối kp =ddooois tượng
+==================================== earliest lấy cái tạo sớm nhất
+Lesson.objects.earliest('create_date')
+
+================================================= filter
+Lesson.objects.filter(sub__endwith ='') 
+Lesson.objects.filter(create_date__month =7) lấy dữ liệu tháng 7
+Lesson.objects.filter(create_date__month__range =[7,10]) lấy dữ liệu tháng 7 đến 10
+Lesson.objects.filter(create_date__month__in =[7,10,8]) lấy dữ liệu tháng 7,10,8
+
+__gt so sánh lớn hơn
+__lt so sánh nhỏ hơn
+__gte so sanh lớn hơn hoặc bằng
+Lesson.objects.filter(create_date__month__gte =6)
+
+===============================================exclude lấy phủ định
+
+==================================================== and or =========
+from django.db.models import Q
+, là and
+Q là hoặc
+Lesson.object.filter(Q(active =True) | Q(sub__icontainer = 'java'))
+
+
+==================================== lazy (gọi tác động mới bắt đầu truy vấn)
+
+============================================================== order_by
+Caterogy.object.all().order_by("name") tăng dần
+Caterogy.object.all().order_by("-name") giảm dần
+Caterogy.object.all().order_by("name" ,"-id") nếu trùng tên thì giảm dần theo id
+
+
+
+====================================================== admin
+python manage.py createsuperuser
+https://docs.djangoproject.com/en/4.1/intro/tutorial02/
+
+
+
+
+
+============================== rest api 
+from rest_framework.serializers import ModelSerializer
+
+from .models import Couses
+class CousesSerializer(ModelSerializer):
+    class Meta:
+        model = Couses
+        fields = ['id','sub','image','create_date','category']
+
+
+
+
+
+=============== list
+cou = Couses.objects.all()
+CousesSerializer(courses,many=true).data
+
+
+
+======= 1 đối tượng 
+c = Couses.objects.get(pk =1)
+CousesSerializer(c).data
+
+
+https://www.django-rest-framework.org/api-guide/pagination/#modifying-the-pagination-style
+
+
+
+
+
+=========================== oauth2 ====================
+
+pip install django-oauth-toolkit
+
+INSTALLED_APPS = [
+    ...
+    'oauth2_provider',
+]
+
+REST_FRAMEWORK = {
+    ...
+     'DEFAULT_AUTHENTICATION_CLASSES': (
+         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+    )
+}
+
+urlpatterns = [
+   ...
+    path("o/", include('oauth2_provider.urls', namespace='oauth2_provider')),
+
+]
+
+python manage.py migrate oauth2_provider
+
+
+http://127.0.0.1:8000/o/applications/register/

@@ -1,0 +1,26 @@
+https://www.youtube.com/watch?v=WL4dL3R6Pac&list=PL_-VfJajZj0XHWBAxzGh1bZPACRbjbro3&index=13
+
+-Ý tưởng Cho một mảng [{phần tử cấp 1},{phần tử cấp 2},{phần tử cấp 3}]
+- Phần tử cấp 1 có Children( con)
+- Render ra phần tử cuối 
+- Khi onclick check nếu có phần tử children thì pussk phần tử children vào mảng ban đầu
+- Cách hiện tiêu đề khi click check xem nếu lenght mảng ban đầu > 1 thì mới hiện
+
+
+const item =[
+	{
+	  titel:tieu de 1,
+	  children:{
+		  title:header tiêu de 1,
+		  data:[
+			{titele:con tiêu đề 1}
+			{titele:con tiêu đề 1}
+		       ]
+		}
+	}
+]
+
+
+[data, setdata]=useStare([{data:item}]
+
+const currenData = data[data.lenght-1] // lấy phần tử cuối

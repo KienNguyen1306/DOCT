@@ -1,0 +1,14 @@
+ ***ẩn thanh scrollbar
+
+cha::--webkit-scrollbar{
+display:none
+}
+
+ ***hiệu ứng scroll:
+ scroll-behavior:smooth
+ 
+ *****  canh chỉnh điểm bắt đầu
+ cha
+ scroll_snap-type:both
+ con
+ scroll_snap-align:start

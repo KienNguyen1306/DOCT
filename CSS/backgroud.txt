@@ -1,0 +1,14 @@
+   background-color:linear-gradient(to top ,#ccc transparent)
+    backdrop-filter:blur(10px);
+
+========================background-imge========================
+background-imge
+background-position:50% 50%   canh giauw
+
+
+
+========================================
+
+background-image: conic-gradient(
+        #CCF2F4, #72F4F2 var(--loading-value), 
+        transparent var(--loading-value))

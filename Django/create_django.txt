@@ -1,0 +1,454 @@
+https://github.com/KienNguyen1306/restapiduonghuuthanh_django
+
+
+B1:
+- python3 -m venv env
+- source env/bin/activate  # On Windows use `env\Scripts\activate`
+- pip install django
+- pip install djangorestframework
+
+- django-admin startproject main
+- cd tutorial
+- django-admin startapp backend
+
+=======================================================================================================
+B2:
+INSTALLED_APPS = [
+    ...
+    'backend.apps.backendConfig',
+    'rest_framework',
+]
+
+=======================================================================================================
+B3:
+- create file urls.py in backend
+In file urls.py
+
+from django.urls import include, path
+urlpatterns = [
+      path('',include(router.urls)),
+]
+
+- create thư mục static in backend
++ trong file static tạo thư mục image (để upload ảnh )
++ Cấu hình thu mục root ảnh trong file setting.py
+MEDIA_ROOT = '%s/backend/static/'%BASE_DIR
+
+=======================================================================================================
+B4:In File urls.py in main
+from django.urls import include, path
+
+urlpatterns = [
+   ...
+    path('', include('apitravel.urls')),
+]
+
+
+=======================================================================================================
+B5: Kết nối database Tạo CSDL trong MYSQL 
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'apitraveldb',
+        'USER':'root',
+        'PASSWORD':'Az142685@',
+        'HOST':''
+    }
+}
+
+=======================================================================================================
+B6: Tạo model
+
+IN file modoel in backend
+
+********************************
+from django.db import models
+from django.contrib.auth.models import AbstractUser
+
+class User(AbstractUser):
+    avatar = models.ImageField(upload_to='uploads/%Y/%m',default=False)
+
+
+
+class Category(models.Model):
+    # p = models.CharField(primary_key=True)
+    name = models.CharField(max_length=100,null=True,unique=True)
+
+    def __str__(self):
+        return self.name
+    
+class ItemBase(models.Model):
+    class Meta:
+        abstract = True
+
+    sub = models.CharField(max_length=200,null=True)
+    image =models.ImageField(upload_to='courses/%Y/%m',default=None)
+    create_date = models.DateTimeField(auto_now_add=True)
+    update_date = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.sub
+
+
+
+class Couses(ItemBase):
+    class Meta:
+        unique_together = ('sub','category')
+        ordering = ['-id']
+
+    des = models.TextField(null=True,blank=True)
+    category = models.ForeignKey(Category,on_delete=models.SET_NULL,null=True)
+
+   
+
+class Lesson(ItemBase):
+    class Meta:
+        unique_together = ('sub','couses')
+    
+    # content =models.TextField()
+    content =RichTextField()
+    couses = models.ForeignKey(Couses,related_name="lesson",on_delete=models.CASCADE)
+    tags = models.ManyToManyField('Tag',related_name="lesson",blank=True,null=True)
+
+
+    def __str__(self):
+        return self.content
+    
+
+class Tag(models.Model):
+    name = models.CharField(max_length=50,unique=True)
+
+    def __str__(self):
+        return self.
+
+********************************
+
+- In SETTING.py applye
+AUTH_USER_MODEL = 'backend.User'
+
+- python install pillow
+- python manage.py makemigrations
+- python manage.py migrate
+
+
+
+=======================================================================================================
+B7:Tạo các trang quản trị cho models trong django
+
+- python manage.py createsuperuser
++ username
++ Email
++ PassWork
+
+In file backend admin.py
+
+from .models import *
+
+
+*******************************************
+- Cấu hình tùy chỉnh admin với (LessonAdmin)
+
+class LessonAdmin(admin.ModelAdmin):
+    # hiển thị các cột đã chỉ định
+    list_display = ['id','sub','create_date','active','content','couses']
+
+    # Tìm kiếm
+    search_fields = ['sub','create_date','couses__des']
+    # Lọc 
+
+    list_filter =['sub','couses__des']
+    readonly_fields = ['avatar']
+
+    def avatar(self,lesson):
+        return mark_safe("<img src ='/static/{img_url}' alt='loi' width = '100px'/>".format(img_url = lesson.image.name))
+
+    class Media:
+        css ={
+            'all':('/static/css/main.css',)
+        }
+
+
+*********************************************
+
+
+
+
+
+admin.site.register(Category)
+admin.site.register(Couses)
+admin.site.register(Lesson,LessonAdmin)
+
+
+
+
+=======================================================================================================
+
+B8 : Create thư mục Serializers in backend
+
+*********************************************
+from rest_framework import serializers
+from .models import *
+
+
+class UserSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id','first_name','last_name','username','email','avatar','password']
+        
+        # ============= chỉ để tạo password không hieent thị password =========
+        extra_kwargs = {
+            'password':{'write_only':'true'}
+        }
+
+	# ===============ghi đè (băm mk)=================
+    def create(self, validated_data):
+        user = User(**validated_data)
+        # user.first_name = validated_data['first_name']
+        # ...
+        user.set_password(validated_data['password'])
+
+        
+        user.save()
+
+        return user
+
+
+class LessonSerializer(ModelSerializer):
+    tags = TagSerializer(many=True)
+    
+    class Meta:
+        model = Lesson
+        fields = ['id','sub','image','content','create_date','couses',"tags"]
+
+
+*********************************************
+
+=======================================================================================================
+B9 : In file views.py in backend
+
+*********************************************
+from django.shortcuts import render
+# Create your views here.
+from rest_framework import viewsets,permissions,generics
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser
+from rest_framework import status
+from .models import *
+from .serializer import CousesSerializer,LessonSerializer,UserSerializer,JoinSerializer
+
+
+class UserViewSet(viewsets.ViewSet,
+                generics.ListAPIView,
+                generics.DestroyAPIView,
+                generics.CreateAPIView,
+                generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    # ============ upload file ============
+    parser_classes = [MultiPartParser,]
+
+    def get_permissions(self):
+        if self.action == 'retrieve':
+            return [permissions.IsAuthenticated()]   
+        return [permissions.AllowAny()]
+
+
+class CousesViewSet(viewsets.ModelViewSet):
+    queryset = Couses.objects.filter(active = True)
+    serializer_class = CousesSerializer
+    # permission_classes =[permissions.IsAuthenticated]
+
+# ============= kkhong dùng drf_yasg ================
+    # swagger_schema = None
+
+# ================ dăng mnhaapj mới đi=ược xem ==================
+    # def get_permissions(self):
+    #     if self.action == 'list':
+    #         return [permissions.AllowAny()]     
+    #     return [permissions.IsAuthenticated()]
+    
+class LessonViewser(viewsets.ModelViewSet):
+    queryset = Lesson.objects.filter(active=True)
+    serializer_class = LessonSerializer
+
+
+    # cung cap an api khoas hoc?
+    @action(methods=['post'],detail=True,url_path='hide-lesson',url_name='hide-lesson')
+    # /lesson/{pk}/hide-lesson
+    def hide_lesson(self,request,pk):
+        try:
+            l = Lesson.objects.get(pk=pk)
+            l.active = False  
+            l.save() 
+        except Lesson.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(data=LessonSerializer(l,context= {'request':request}).data,status=status.HTTP_200_OK)
+
+
+
+    
+# class JoinViewser(viewsets.ModelViewSet):
+#     queryset = Couses.objects.filter(category__id = Category['id'])
+#     serializer_class = JoinSerializer
+
+*********************************************
+
+=======================================================================================================
+
+B9 : Chứng thực người dùng
+
+
+************************************
+- pip install django-oauth-toolkit
+
+
+************************************
+- In setting.py
+
+INSTALLED_APPS = [
+    ...
+    'oauth2_provider',
+]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+    )
+}
+
+
+************************************
+- In file main urls.py thêm
+urlpatterns = [
+    path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+]
+
+
+************************************
+- python manage.py migrate
+
+************************************
+- Chạy http://localhost:8000/o/applications/
++ name
++ Client:Cònidential
++ Authorization:Resource owner passwork
++ save (copy client id and client secret)
+
+
+************************************
+- Api lấy tocken
++ http://localhost:8000/o/token/
+
+************************************
+- Method post (form data )
++ username:admin
++ passwork:Az142685@
++ client_id:copy ở trên
++ client_secret:copy ở trên
++ grant_type:passwork 
+=> access_tokent:
+
+************************************
+- các sử dụng access_tokent
+headers:Authorization : Bearer %{access_tokent}
+
+
+************************************
+- cách bật chứng thực 
++ in file views.py in backend
+from rest_framework import permissions,
+class CousesViewSet(viewsets.ModelViewSet):
+   	....
+    permission_classes =[permissions.IsAuthenticated]
+
+
+************************************
+- Cách lấy thông ti một User
++ in file views.py in backend
+class UserViewSet(...):
+   	...
+    def get_permissions(self):
+        if self.action == 'retrieve':
+            return [permissions.IsAuthenticated()]   
+        return [permissions.AllowAny()]
+
+********************************** hoặc == main
+- Cách lấy thông ti một User
+
+class UserViewSet(viewsets.ViewSet,generics.CreateAPIView):
+    queryset = User.objects.filter(is_active = True)
+    serializer_class = UserSerializer
+
+    def get_permissions(self):
+        if self.action == 'get_current_user':
+            return [permissions.IsAuthenticated()]
+        return [permissions.AllowAny()]
+   
+    @action(methods=['get'],detail=False,url_path='current-user')
+    def get_current_user(self,request):
+        return Response(self.serializer_class(request.user).data,
+            status=status.HTTP_200_OK)
+
+=======================================================================================================
+B10: Tích hợp Swagger
+-pip install drf-yasg
+INSTALLED_APPS = [
+   ...
+   'django.contrib.staticfiles',  # required for serving swagger ui's css/js files
+   'drf_yasg',
+   ...
+]
+
+
+*****************************************
+-In file urls.py in main
+
+...
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+...
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Snippets API",
+      default_version='v1',
+      description="Test description",
+      terms_of_service="https://www.google.com/policies/terms/",
+      contact=openapi.Contact(email="contact@snippets.local"),
+      license=openapi.License(name="BSD License"),
+   ),
+   public=True,
+   permission_classes=[permissions.AllowAny],
+)
+
+urlpatterns = [
+   re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+   re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+   re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+   ...
+]
+
+***********************************************
+- LINK : localhost/swagger
+
+***********************************************
+- Các tắt swagger trong mọt bộ api
++ In file views.py in backend
+class Travelviewset(viewsets.ModelViewSet):
+    ...
+    swagger_schema=None
+
+
+==================================================================================================================================
+==================================================================================================================================
+==================================================================================================================================
+
+
+
+
+

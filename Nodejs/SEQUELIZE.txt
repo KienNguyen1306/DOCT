@@ -1,0 +1,140 @@
+B1: npm init Hoặc npm init -y
+===================================================================================
+B2: In file package.json
+"scripts": {
+    "dev": "node index.js"
+  },
+
+- Tạo file index.js
+-Chạy file node index.js Hoặc (npm run dev)
+
+===================================================================================
+
+B3: 
+- npm i express
+- npm i dotenv (đọc biến môi trường)
+- npm i cors (server lấy data)
+- npm i nodemon (Tự động reload rever khi thay đổi)
+- npm install --save mysql2
+- npm install --save sequelize
+===================================================================================
+
+B4:
+In file index.js (https://expressjs.com/en/starter/hello-world.html)
+
+const express = require("express");
+//const bodyParser = require("body-parser");
+const cors = require("cors"); // url cho phép
+require("dotenv").config(); // kết nối biến môi trường
+const app = express();
+
+//app.use(bodyParser.json())
+// kết nối cort
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  })
+);
+
+//CRUD
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use("/", (req, res) => {
+  res.send("Hello World!");
+});
+
+const PORT = process.env.PORT || 8888;
+app.listen(PORT, () => {
+  console.log("Example app listening on port", PORT);
+});
+
+===================================================================================
+
+B5: In file package.json
+"scripts": {
+    "dev": "nodemon index.js"
+  },
+
+- Tạo file index.js
+-Chạy file node index.js Hoặc (npm run dev)
+
+
+B6:
+- Create folder model
+- Create index.js in model and (https://sequelize.org/docs/v6/getting-started/)
+
+const { Sequelize } = require("sequelize");
+
+// Option 3: Passing parameters separately (other dialects)
+const sequelize = new Sequelize("database", "username", "password", {
+  host: "localhost",
+  logging:false, //ẩn console.log
+  dialect: "mysql",
+});
+
+module.exports = sequelize;
+
+- Create user.js in model
+
+const { DataTypes } = require("sequelize");
+const sequelize = require("./index");
+const User = sequelize.define(
+  "User",
+  {
+    // Model attributes are defined here
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      // allowNull defaults to true
+    },
+  },
+  {
+    tableName: 'users'
+  }
+);
+
+// `sequelize.define` also returns the model
+console.log(User === sequelize.models.User); // true
+module.exports = User;
+
+==========================================================================================
+
+B7:
+- IN file index.js root
+const User =require('./model/user')
+
+// create table user
+User.sync({ force: true });
+
+// show select user
+//User.sync();
+
+// delete table user
+//User.drop();
+
+
+
+B8: Create folder controllers (https://sequelize.org/docs/v6/core-concepts/model-instances/)
+- Create file userController.js in controller
+
+const User = require("../model/user");
+const adduer = async (req, res) => {
+  const jane = User.build({ firstName: "nguyenduckien", lastName: "Jane" });
+  console.log(jane instanceof User); // true
+  await jane.save();
+  console.log(jane.toJSON()); // This is good!
+  console.log(JSON.stringify(jane, null, 4));
+  res.status(200).json(jane.toJSON());
+};
+
+module.exports = { adduer };
+
+
+B9: IN file index.js root
+const userController =require('./controllers/userController')
+app.get("/add", userController.adduer);

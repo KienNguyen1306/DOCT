@@ -1,0 +1,34 @@
+B1:
+- https://cloud.google.com/dialogflow
+- Click: Go to console Dialogflow ES (Essentials)
+B2: Create new agent => CREATE
+
+B3: setting mychat
+- GOOGLE PROJECT click Project ID
+
+B4:
+NAVBAR : API ET services => Identifiers => Manage service accounts => CREATE accounts service 
+
++ Service account name:
++ Service account l..
+
+=> CREACT AND CONTINUE
+=> ROLE:Owner
+=> CONTINUE =>DONE
+
+B4: Tại Service accounts
+- Click Email
+=> KEY => ADDKEY => Create a key =>JSON =>Close
+
+
+B5 :
+- https://dashboard.kommunicate.io/login?referrer=/
+- NAVBAR : Bot integration => Dialogflow ES => GET KEY Chọn file Json đã lưu
+- Save and proceed
++ Bot name:TÊn =>Save and proceed =>disable this feature => Finish bot setup
+- TRy out your new bot MychatAgent
+
+B6:
+HOME https://dashboard.kommunicate.io/onboarding
+- Click Install Kommunicate’s chat widget on your website or app
+- Copy doạn code

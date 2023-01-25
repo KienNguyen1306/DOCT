@@ -1,0 +1,57 @@
+B1:https://console.clever-cloud.com/?user=user_c131645f-9a4c-4139-b0ff-4f0f5c459edc%2Cuser_c131645f-9a4c-4139-b0ff-4f0f5c459edc
+============================================================================================
+B2:
+- Add an organization > create
+- name:=> create => an add_on =>mysql =>selecte >dev =>next
+- name:mydb =>next =>PHPMyAdmin
+
+============================================================================================
+B3:Click b4yhhabumx6egomaymkv
+- Name Table
+- save
+
+============================================================================================
+B4:
+Create vercer.json in root
+
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "./index.js",
+        "use": "@vercel/node"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "/"
+      }
+    ]
+}
+
+============================================================================================
+B5:
+https://vercel.com/new/import?s=https%3A%2F%2Fgithub.com%2FKienNguyen1306%2FTEXT_NODEJS&hasTrialAvailable=1&showOptionalTeamCreation=false&project-name=text-nodejs&framework=other&totalProjects=1&remainingProjects=1
+
+-ProjectName:apiNodejs
+-Environment Variables
++ HOST :VSCODE
++ Value (Will Be Encrypted):https://console.clever-cloud.com/organisations/orga_816fe4ef-112e-417d-b3e6-12768152d005/addons/addon_ea540bf5-ae63-4dc2-9fa3-12fd60337517  
+
+(admin in Clever Cloud)
+
+
+- APP
+-HOST : value in (clever-cloud)
+- APP
++ NAME : value in (clever-cloud)
+- APP
++ USER : value in (clever-cloud)
+- APP
++ NAMEDATA: value in (clever-cloud)
+============================================================================================
+B6:
+- DELOY
+- COUNtinue to Dashboadrd
+

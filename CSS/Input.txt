@@ -1,0 +1,35 @@
+trong thẻ in put co thang thun(-webkit-slide-thunb)
+appearance:none
+
+
+========================== valadel input=====================
+
+<div class="item">
+      <input type="email" placeholder="email" />
+      <label
+        data-empty="hay nhap truongnay"
+        data-invalid="đinh dang khong hop le"
+        data-valid="hop lẹ"
+      >
+      </label>
+    </div>
+	
+	
+	
+input:placeholder-shown ~ label::before{
+    content:attr(data-empty);
+}
+input:invalid~label::before{
+    content:attr(data-invalid);
+    color: red;
+}
+input:not(:placeholder-shown):valid~label::before{
+    content:attr(data-valid);
+    color: aqua;
+
+}
+
+=======passwork========
+passwork min-lenght-6
+
+==========================end valadel input=====================

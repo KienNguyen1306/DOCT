@@ -1,0 +1,14 @@
+{
+opacity:0;
+pointer-event:none //khi click vào sẽ trở nên vô nghĩa
+}
+
+c1
+{
+visibility:hident;
+opacity:0;
+}
+
+bổ ẩn {
+visibility:visible;
+}

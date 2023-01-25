@@ -1,0 +1,55 @@
+apxbylmztlhydldh
+adpoiaccuwsamfjv
+
+================================================
+capcha
+6Lc-gEIjAAAAAChR9AxrQI-CcVxTOYL2JPqWLkBI
+
+6Lc-gEIjAAAAADhXhkqNEpoJkyQNUrlVap9LtAF8
+
+=================================================
+google clpu
+======================================================
+zeet
+zeet-370406
+
+zeet-707@zeet-370406.iam.gserviceaccount.com
+
+============================================================
+awn
+389948499274
+
+============================ login gg=================
+id:65143318331-98jgg873qflbj1b8brecbtolsbtt1649.apps.googleusercontent.com
+mkh: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
+
+=============================== login facebook==========
+
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '{your-app-id}',
+      cookie     : true,
+      xfbml      : true,
+      version    : '{api-version}'
+    });
+      
+    FB.AppEvents.logPageView();   
+      
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
+
+
+
+========================= mlk django ================
+GAs1WuBffbYcUgUR9OfSnOzk2DOcY1CMQCsSj0vs
+
+O0dLtIqPSGeGuoqJ05IJofjrYgzr3JMSTdImsxHvI5Y9bsVkwWk9DFUm6ONpoYv06XW4c2IX634mcKioCBxgn0QkdPy0IUpGXy4V2O6gV35tS6AiE4PlFB1BhIRSwBHC

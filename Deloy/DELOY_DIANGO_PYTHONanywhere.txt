@@ -1,0 +1,29 @@
+B1: git clone https://github.com/KienNguyen1306/Api_travel.git
+cd Api_travel
+=================================================================
+B2: mkvirtualenv --python=/usr/bin/python3.10 myvirtualenv 
+=================================================================
+B3: pip install -r requirements.txt
+=================================================================
+B4:tạo web
++ Tại Virtualenv: /home/kienpro674/.virtualenvs/myvirtualenv
++ Tại Source code:/home/kienpro674/Api_travel
+
++ Tại WSGI configuration file:
+import os
+import sys
+path = '/home/kienpro674/Api_travel'
+if path not in sys.path:
+    	sys.path.append(path)
+os.environ['DJANGO_SETTINGS_MODULE'] = 'appmain.settings'
+
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()
+
+
+=================================================================
+b5: tạo database trong pythonenywhere
+=================================================================
+b6: python manage.py makemigrations
+    python manage.py migrate
+

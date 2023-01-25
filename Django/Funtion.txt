@@ -1,0 +1,61 @@
+========================= Post file =========================
+
+from rest_framework.parsers import MultiPartParser
+
+class UserViewSet(...):
+    ...
+    parser_classes = [MultiPartParser,]
+
+Infile setting.py
+REST_FRAMEWORK = {
+     'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+    ]
+}
+
+======================end Post file =========================
+
+
+============= bem mật khẩu khi đăng kí serilazeer==========================
+
+In file Serialazer 
+
+class UserSerializer(ModelSerializer):
+	.....
+
+    def create(self, validated_data):
+        user = User(**validated_data)
+        # user.first_name = validated_data['first_name']
+        # ...
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
+
+========================= end bem mật khẩu khi đăng kí serilazeer=================
+
+============================================ join 2 table= ====================
+
+from rest_framework import serializers
+from .models import User, Company
+
+class UserSerializer(serializers.ModelSerializer):
+    company_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ['id', 'name', 'email', 'company_name']
+
+    def get_company_name(self, obj):
+        company = Company.objects.get(id=obj.company_id)
+        return company.name
+
+
+
+from rest_framework import viewsets
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+========================================end join 2 table= ====================
