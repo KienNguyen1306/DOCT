@@ -15,7 +15,7 @@ B1:
 B2:
 INSTALLED_APPS = [
     ...
-    'backend.apps.backendConfig',
+    'backend.apps.BackendConfig',
     'rest_framework',
 ]
 
@@ -25,6 +25,9 @@ B3:
 In file urls.py
 
 from django.urls import include, path
+from rest_framework.routers import DefaultRouter
+router=DefaultRouter()
+router.register('api/travel',views.Travelviewset)
 urlpatterns = [
       path('',include(router.urls)),
 ]
@@ -40,7 +43,7 @@ from django.urls import include, path
 
 urlpatterns = [
    ...
-    path('', include('apitravel.urls')),
+    path('', include('backend.urls')),
 ]
 
 
@@ -128,7 +131,7 @@ class Tag(models.Model):
 - In SETTING.py applye
 AUTH_USER_MODEL = 'backend.User'
 
-- python install pillow
+- pip install pillow
 - python manage.py makemigrations
 - python manage.py migrate
 
@@ -192,7 +195,7 @@ from rest_framework import serializers
 from .models import *
 
 
-class UserSerializer(ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id','first_name','last_name','username','email','avatar','password']
@@ -215,7 +218,7 @@ class UserSerializer(ModelSerializer):
         return user
 
 
-class LessonSerializer(ModelSerializer):
+class LessonSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True)
     
     class Meta:
