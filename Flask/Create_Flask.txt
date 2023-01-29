@@ -1,6 +1,13 @@
+https://github.com/KienNguyen1306/api_flask-shop
+
+
 B1: py -3 -m venv venv
 B2: venv\Scripts\activate
+
+============================================================================
 B3: pip install Flask
+    pip install PyMySQL
+============================================================================   
 B4: Create __init__.py
 from flask import Flask
 app = Flask(__name__)
@@ -14,20 +21,215 @@ def hello_world():
 if __name__ =='__main__':
     app.run(debug=True)
 
+============================================================================
 B6 :pip install -U Flask-SQLAlchemy
 
-
+============================================================================
 B7 : in file __init__.py (kết nối database)
+
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-# create the extension
-db = SQLAlchemy()
-# create the app
 app = Flask(__name__)
-# configure the SQLite database, relative to the app instance folder
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
-# initialize the app with the extension
-db.init_app(app)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root1:123456@localhost/textflaskdb'
+
+db =SQLAlchemy(app=app)
 
 ===========================================================
 B8: Create file model.py
+from __init__ import db,app
+
+https://github.com/KienNguyen1306/api_flask-shop
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(30))
+    
+
+    
+with app.app_context():
+    db.create_all()
+    # u = db.User()
+    # db.session.add()
+    # db.session.commit()
+
+=====================================================================================================
+B9: Create file admin.py
+    pip install flask-admin
+
+- In file admin.py
+from __init__ import app
+from flask_admin import Admin
+
+admin=Admin(app=app,name='text',template_mode='bootstrap4')
+
+- In file app.py
+
+if __name__ =='__main__':
+    from admin import *
+    app.run(debug=True)
+
+=====================================================================================================
+
+B10 : Create file until.py
+- In file until.py
+
+from __init__ import *
+from model import User
+
+
+# ************************ read banner ********************************
+def read_user():
+    user = User.query.order_by(-User.id).all()
+    datas = []
+    for b in user:
+        datas.append({
+            'id':b.id,
+            'username':b.username,
+            'email':b.email,
+        })
+    return datas
+# ******************************** post User ********************************
+def post_User(username , email):
+    b = User(username = username,email=email)
+    db.session.add(b)
+    db.session.commit()
+
+# ******************************** delete User ********************************
+def delete_User(id):
+    User.query.filter(User.id == id).delete()
+    db.session.commit()
+    
+    
+def read_user_by_id(user_id):
+    user = User.query.filter(User.id == user_id).first()
+    datas = []
+    datas.append({
+            'username':user.username,
+            'email':user.email,
+        })
+    return datas
+
+
+
+
+
+
+# ============================== đọc product ====================
+
+def read_product(product_id=None,kw=None,caterogy_id=None,page=1):
+    products = Product.query.order_by(-Product.id).all()
+    listImage = ListImageProduct.query.all()
+    if product_id:
+        products = Product.query.filter(Product.id == product_id).first()
+    if kw:
+        products = Product.query.filter(Product.name.contains(kw)).all()
+    
+    if caterogy_id:
+        products = Product.query.filter(Product.category_id == caterogy_id).all()
+    data = []
+    for p in products:
+        data.append({
+            'id':p.id,
+            'name':p.name,
+            'description': p.description,
+            'sale':p.sale,
+            'priceUp':p.priceUp,
+            'priceDown':p.priceDown,
+            'color':p.color,
+            'ram':p.ram,   
+            'rom':p.rom,
+            'screen':p.screen,
+            'image':p.image,
+            'create_time':p.create_time,
+            'active':p.active,
+            'card':p.card,
+            'category_id':p.category_id,
+            'listImage':[{'id':img.id,'image':img.image,'color':img.color} for img in listImage if p.id == img.products_id]
+        })
+        
+    size = app.config['SIZE_PRODUCT']
+    start = (page -1) * size
+    end = start + size
+    return data[start:end]
+
+
+
+
+
+# with app.app_context():
+#     read_user_by_id(4)
+
+
+===============================================================================
+B11 : In file app.py
+
+from __init__ import app
+from flask import jsonify,request
+# from admin import *
+import unit
+
+
+
+@app.route("/")
+def hello_world():
+    return jsonify({'data':'nguyen duc kien'})
+
+
+# ****************************** read banner ******************************
+@app.route("/api/user",methods = ['GET'])
+def User_all():
+    banner=unit.read_user()
+    return jsonify({'data':banner})
+
+# ****************************** post banner ******************************
+@app.route("/api/user",methods = ['GET','POST'])
+def Post_one():
+    if request.method == 'POST':
+        try:
+            data = request.json
+            username = data.get('username')
+            email = data.get('email')
+            unit.post_User(username=username,email=email)
+        except:
+            return jsonify({'code':400}),400
+    return jsonify({'code':200}),200
+
+# ****************************** delete banner ******************************
+@app.route("/api/user/<int:id>",methods = ['DELETE'])
+def Delete_one(id):
+    if request.method == 'DELETE':
+        try:
+            unit.delete_User(id=id)
+        except:
+            return jsonify({'code':400}),400
+    return jsonify({'code':200}),201
+
+
+# ****************************** user by id ******************************
+@app.route("/api/user/<int:user_id>",methods = ['GET'])
+def Products_by_id(user_id):
+    user=unit.read_user_by_id(user_id=user_id)
+    return jsonify({'data':user}),200
+
+
+
+
+# ======================== product ======================
+@app.route("/api/products",methods = ['GET'])
+def Products_all():
+    kw = request.args.get('keywork')
+    caterogy_id=request.args.get('caterogy_id')
+    page = request.args.get('page',1)
+    pro=until.read_product(kw=kw,caterogy_id=caterogy_id,page=int(page))
+    return jsonify({'data':pro})
+
+
+
+
+if __name__ =='__main__':
+    app.run(debug=True)
+    
