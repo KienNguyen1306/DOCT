@@ -1,0 +1,124 @@
+https://redux-toolkit.js.org/tutorials/quick-start
+
+
+B1:npm install @reduxjs/toolkit react-redux
+
+==================================================================
+B2:
+Create a file named src/store/index.js
+
+In file src/store/index.js
+
+import { configureStore } from '@reduxjs/toolkit'
+
+export const store = configureStore({
+  reducer: {},
+})
+==================================================================
+
+B3:
+In file index.js root
+
+...
+import { store } from './app/store'
+import { Provider } from 'react-redux'
+
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+)
+
+===============================================================
+B4:
+Create file reducer/callApi.js
+
+let Initstate = {
+  data:[]
+};
+
+function UserReducer(state = Initstate, action) {
+  // eslint-disable-next-line default-case
+  switch (action.type) {
+    case "get": {
+      return {
+        qly: state.qly + 1,
+      };
+    }
+    case "post": {
+      return {
+        qly: state.qly - 1,
+      };
+    }
+    default:
+      return state;
+  }
+}
+
+export default UserReducer;
+
+============================================================
+B5: Infile store/index.js
+import { configureStore } from "@reduxjs/toolkit";
+import UserReducer from "../reducer/UserReducer.js";
+import ProductCart from "../reducer/ProductCart.js";
+export default configureStore({
+  reducer: {
+    user: UserReducer,
+    cart: ProductCart,
+  },
+});
+
+=================================================================
+B6: Cách lấy dữ liệu store
+import { useSelector } from "react-redux";
+
+function Header() {
+  const nameUser = useSelector((state) => state.user);
+  const qlyProduct = useSelector((state) => state.cart);
+  return (
+    <>
+      <h1>ten:{nameUser.name}</h1>
+      <h2>qly:{qlyProduct.qly}</h2>
+    </>
+  );
+}
+
+export default Header;
+
+=================================================================
+B7: dispatch
+...
+import { useDispatch } from "react-redux";
+
+function Container() {
+...
+  const dispatch = useDispatch();
+  function Login() {
+    dispatch({ type: "login", name: input });
+  }
+  function Logout() {
+    dispatch({ type: "login" });
+  }
+  function App() {
+    dispatch({ type: "app" });
+  }
+  function Remove() {
+    dispatch({ type: "remove" });
+  }
+  return (
+    <>
+      <input value={input} onChange={(e) => setinput(e.target.value)} />
+      <button onClick={Login}>login</button>
+      <br />
+      <button onClick={Logout}>loout</button>
+
+      <button onClick={App}>app</button>
+      <br />
+      <button onClick={Remove}>Remove</button>
+    </>
+  );
+}
+
+export default Container;

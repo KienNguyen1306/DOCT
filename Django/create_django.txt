@@ -1,5 +1,10 @@
 https://github.com/KienNguyen1306/restapiduonghuuthanh_django
-
+- pip install pillow
+- python manage.py makemigrations
+- python manage.py migrate
+- python manage.py runserver
+--pip freeze > requirements.txt
+--pip install -r requirements.txt
 
 B1:
 - python3 -m venv env
@@ -331,7 +336,7 @@ urlpatterns = [
 
 
 ************************************
-- python manage.py migrate
+- python manage.py migrate oauth2_provider
 
 ************************************
 - Chạy http://localhost:8000/o/applications/
