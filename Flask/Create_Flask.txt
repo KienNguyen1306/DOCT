@@ -4,14 +4,17 @@ https://github.com/KienNguyen1306/api_flask-shop
 B1: py -3 -m venv venv
 B2: venv\Scripts\activate
 
-============================================================================
+=================================================================================================
+=================================================================================================
 B3: pip install Flask
     pip install PyMySQL
-============================================================================   
+=================================================================================================
+=================================================================================================   
 B4: Create __init__.py
 from flask import Flask
 app = Flask(__name__)
-============================================================================
+=================================================================================================
+=================================================================================================
 B5: Create app.py
 from __init__ import app
 @app.route("/")
@@ -21,22 +24,28 @@ def hello_world():
 if __name__ =='__main__':
     app.run(debug=True)
 
-============================================================================
+=================================================================================================
+=================================================================================================
 B6 :pip install -U Flask-SQLAlchemy
 
-============================================================================
+=================================================================================================
+=================================================================================================
 B7 : in file __init__.py (kết nối database)
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-
+from flask_jwt_extended import JWTManager
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root1:123456@localhost/textflaskdb'
 
 db =SQLAlchemy(app=app)
 
-===========================================================
+// cấu hình  token
+app.config['JWT_SECRET_KEY'] = 'super-secret'
+jwt = JWTManager(app)
+=================================================================================================
+=================================================================================================
 B8: Create file model.py
 from __init__ import db,app
 
@@ -49,6 +58,18 @@ class User(db.Model):
     email = db.Column(db.String(30))
     
 
+class Userlogin(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  name = db.Column(db.String(20), unique=True, nullable=False)
+  password =db.Column(db.String(20), unique=True, nullable=False)
+  lastname =db.Column(db.String(20), unique=True, nullable=False)
+  
+  def json(self):
+    return {
+      "name":self.name,
+      "lastname":self.lastname
+    }
+  
     
 with app.app_context():
     db.create_all()
@@ -56,7 +77,8 @@ with app.app_context():
     # db.session.add()
     # db.session.commit()
 
-=====================================================================================================
+=================================================================================================
+=================================================================================================
 B9: Create file admin.py
     pip install flask-admin
 
@@ -72,7 +94,8 @@ if __name__ =='__main__':
     from admin import *
     app.run(debug=True)
 
-=====================================================================================================
+=================================================================================================
+=================================================================================================
 
 B10 : Create file until.py
 - In file until.py
@@ -157,6 +180,28 @@ def read_product(product_id=None,kw=None,caterogy_id=None,page=1):
     return data[start:end]
 
 
+# ============================== post userlogin =====================
+def post_userlogin(name,password,lastname):
+    u = Userlogin(name=name,password=password,lastname=lastname)
+    db.session.add(u)
+    db.session.commit()
+    return 'user uploaded and saved!'
+
+
+# ============================== get userlogin =====================
+def get_userlogin(name):
+    u = Userlogin.query.filter(Userlogin.name==name).first()
+    data = Userlogin.json(u)
+    return data
+
+
+
+# ============================== post userlogin =====================
+def check_login(name,password):
+    user = Userlogin.query.filter(Userlogin.name == name ,Userlogin.password == password).first()
+    return user
+
+
 
 
 
@@ -164,7 +209,8 @@ def read_product(product_id=None,kw=None,caterogy_id=None,page=1):
 #     read_user_by_id(4)
 
 
-===============================================================================
+=================================================================================================
+=================================================================================================
 B11 : In file app.py
 
 from __init__ import app
@@ -172,7 +218,7 @@ from flask import jsonify,request
 # from admin import *
 import unit
 
-
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required //token
 
 @app.route("/")
 def hello_world():
@@ -227,6 +273,40 @@ def Products_all():
     pro=until.read_product(kw=kw,caterogy_id=caterogy_id,page=int(page))
     return jsonify({'data':pro})
 
+
+# ========================= post user =================
+@app.route("/rediris",methods = ['POST'])
+def PostUser():
+    data = request.json
+    name = data.get('name')
+    password = data.get('password')
+    lastname = data.get('lastname')
+    if request.method == "POST":
+        userkp = unit.post_userlogin(name=name,password=password,lastname=lastname)
+    return jsonify(userkp),201
+
+
+
+# ========================= get user =================
+@app.route("/token",methods = ['POST'])
+def TokenUser():
+    data = request.json
+    name = data.get('name')
+    password = data.get('password')
+    check = unit.check_login(name=name,password=password)
+    if check:
+        access_token = create_access_token(identity=name)
+    return jsonify(access_token=access_token), 200
+
+
+@app.route('/protected', methods=['GET'])
+@jwt_required()
+def protected():
+    # Get the user identity from the access token
+    current_user = get_jwt_identity()
+    kp = unit.get_userlogin(name=current_user)
+    # Return the user information
+    return jsonify(logged_in_as=kp), 200
 
 
 
