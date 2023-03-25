@@ -12,3 +12,9 @@ background-position:50% 50%   canh giauw
 background-image: conic-gradient(
         #CCF2F4, #72F4F2 var(--loading-value), 
         transparent var(--loading-value))
+
+
+
+
+
+background: linear-gradient(311.76deg, #D4E7FE -15.24%, #FFFFFF 78.85%)

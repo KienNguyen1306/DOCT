@@ -1,0 +1,67 @@
+push() thêm cuối
+pop() xóa cuối
+shift() xóa đầu
+unshift()thêm đầu
+======================
+- May I know your name, please?
+- Can you tell me a little about your hometown?
+- Have a good today
+- just a minute:	chỉ một phút
+- what else:		còn gì nữa
+========================
+- Talk :	nói chuyện
+- meet:		gặp
+- take: 	lấy
+- catch:	nắm,lấy
+- Tell:		nói,kể			(Can you tell me your myself)
+- questions:	câu hỏi
+======================
+- lately:	gần đây
+- headache:	đau đầu 		(I have a bit of a headache today)
+- appointment:	cuộc hẹn  		(I have an appointment next week)
+- a bit:	một chút
+- worried :	lo lắng 		(I'm really worried about my health lately)
+- pretty well:	khá tốt			(I'm doing pretty well)
+- alright : 	được rồi
+- trying: 	cố gắng ,thử
+- exciting :	hấp dẩn,kích thích
+- hope :	hi vọng,mong    	(I hope everything goes well with your appointment)
+- Take care:	hiện gặp lại     
+- soon:		sớm
+- in touch soon:liên lạt sớm   		(I'll be in touch soon)
+- Have a good day:chúc ngày tốt lành
+=======================
+- Until:	cho đến khi		(Until next time, goodbye!)
+- etc:		vân vân
+- population:	dân số			(What is the population of your hometown?)
+- big:		lớn
+- small:	nhỏ
+- kind:		loại
+- popular:	phổ biến
+- attractions:	hấp dẫn
+- hometown:	quê hương
+- over:		qua
+- changed:	thay đổi
+- live:		sống
+- prefer:	thích hơn		(Do you prefer living in your hometown or in a big city?)
+- visit:	thăm
+- recommend:	gợi ý			(Would you recommend people to visit your hometown?)
+- anything:	bất cứ cái gì
+- rest:		nghĩ ngơi
+- Of course: 	Tất nhiên
+- It costs...:	Nó giá...
+- something:	Thứ gì đó
+- Animal:	động vật
+- nothing:	không có gì
+==============================
+- way:		đường
+- shovel: 	cái xẻng		(my mom has to shovel the drive way)
+- hat:		cái mũ
+- mittens:	găng tay		(I put on my hat and mittens. )
+- scarf:	khăn quàng cổ		(My Mom puts on my scarf. )
+- zippers:	kéo khóa
+- jacket:	áo khoát 		(My Mom zippers my jacket.)
+- Throw:	ném
+- Snowbolls:	bóng tuyết		(my sister and I throw snowballs)
+- angel:	thiên thần
+- guardian:	hộ mệnh,giám hộ		(you are my guardian anger)

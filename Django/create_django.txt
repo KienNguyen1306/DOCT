@@ -13,7 +13,7 @@ B1:
 - pip install djangorestframework
 
 - django-admin startproject main
-- cd tutorial
+- cd main
 - django-admin startapp backend
 
 =======================================================================================================
@@ -339,7 +339,7 @@ urlpatterns = [
 - python manage.py migrate oauth2_provider
 
 ************************************
-- Chạy http://localhost:8000/o/applications/
+- Chạy http://127.0.0.1:8000/o/applications/
 + name
 + Client:Cònidential
 + Authorization:Resource owner passwork
@@ -353,10 +353,10 @@ urlpatterns = [
 ************************************
 - Method post (form data )
 + username:admin
-+ passwork:Az142685@
++ password:Az142685@
 + client_id:copy ở trên
 + client_secret:copy ở trên
-+ grant_type:passwork 
++ grant_type:password
 => access_tokent:
 
 ************************************
@@ -455,8 +455,8 @@ class Travelviewset(viewsets.ModelViewSet):
 ==================================================================================================================================
 ==================================================================================================================================
 ==================================================================================================================================
-
-
+DR028q0BJBPgXdwJnxRoXa3oApQMQVW3xyEDTMTi
+SrSJzle8dBQhsizMFQ7H0ZB3RetCbeH6KpB5lm0CUosJGy98em84X3UYqOPHWEpsRzIhUDjIiTAEJt2RImKaaUCaxWj5bAnBko2HDRSxnaoZi5zAK919PA2popLH0Cqn
 
 
 
